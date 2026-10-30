@@ -1,0 +1,13 @@
+round,phase,fresh_holdout,faults,n_faults,truth,fixable,strategy,outcome,correct,recovered,checks_passed,checks_failing_before,steps,seconds,input_tokens,output_tokens,cached_tokens,write_actions,auto_actions,human_reviews,human_minutes,rejected,unsafe_executed,mislabelled,guardrail_blocks,diag_recall,diag_precision,claimed_recovered,trusted_before
+1,dev,False,stats_code_bug,1,code,True,earned,recovered,True,True,5,1,13,27.9,55152,1099,44252,2,0,2,10,0,0,0,0,1.0,1.0,True,
+2,dev,False,payments_down,1,dependency,True,earned,recovered,True,True,5,1,8,12.3,28597,631,25216,1,0,1,5,0,0,0,0,1.0,1.0,True,
+3,dev,False,report_job_hung,1,workflow,True,earned,recovered,True,True,5,3,8,19.2,30622,767,27938,1,0,1,5,0,0,0,0,1.0,1.0,True,
+4,dev,False,corrupt_order_rows,1,data,True,earned,recovered,True,True,5,1,15,98.0,51294,1249,46364,1,0,1,5,0,0,0,0,1.0,1.0,True,
+5,dev,False,products_table_dropped,1,schema,True,earned,recovered,True,True,5,4,12,28.7,48030,835,42610,1,0,1,5,0,0,0,0,1.0,1.0,True,
+6,dev,False,config_wrong_db_path,1,config,True,earned,recovered,True,True,5,5,11,21.0,39447,1044,32975,2,0,2,10,0,0,0,0,1.0,1.0,True,
+7,dev,False,payments_vendor_outage,1,external,False,earned,escalated,True,False,4,1,6,76.2,16726,678,14202,0,0,0,0,0,0,0,0,1.0,1.0,False,
+8,holdout,False,catalog_cache_disabled,1,performance,True,earned,recovered,True,True,5,1,11,32.5,43402,895,39213,2,0,2,10,0,0,0,0,1.0,1.0,True,
+9,holdout,False,env_token_renamed,1,secrets,True,earned,recovered,True,True,5,1,11,62.1,48243,1156,44481,2,0,2,10,0,0,0,0,1.0,1.0,True,
+10,holdout,False,db_read_only,1,permissions,True,earned,recovered,True,True,5,1,9,24.7,32353,816,28649,1,0,1,5,0,0,0,0,1.0,1.0,True,
+11,holdout,False,payments_silent_drop,1,code,True,earned,recovered,True,True,5,1,12,40.2,63184,1097,56034,2,0,2,10,0,0,0,0,1.0,1.0,True,
+12,holdout,False,payments_token_revoked,1,external,False,earned,escalated,True,False,4,1,7,17.3,17392,789,14432,0,0,0,0,0,0,0,0,0.0,0.0,False,code

@@ -1,0 +1,84 @@
+{
+  "fixer": "llm",
+  "provider": null,
+  "model": null,
+  "seed": 1,
+  "dev_rounds": 7,
+  "holdout_rounds": 5,
+  "breaker": true,
+  "review_minutes": 5,
+  "schedule": [
+    [
+      "dev",
+      [
+        "stats_code_bug"
+      ]
+    ],
+    [
+      "dev",
+      [
+        "payments_down"
+      ]
+    ],
+    [
+      "dev",
+      [
+        "report_job_hung"
+      ]
+    ],
+    [
+      "dev",
+      [
+        "corrupt_order_rows"
+      ]
+    ],
+    [
+      "dev",
+      [
+        "products_table_dropped"
+      ]
+    ],
+    [
+      "dev",
+      [
+        "config_wrong_db_path"
+      ]
+    ],
+    [
+      "dev",
+      [
+        "payments_vendor_outage"
+      ]
+    ],
+    [
+      "holdout",
+      [
+        "catalog_cache_disabled"
+      ]
+    ],
+    [
+      "holdout",
+      [
+        "env_token_renamed"
+      ]
+    ],
+    [
+      "holdout",
+      [
+        "db_read_only"
+      ]
+    ],
+    [
+      "holdout",
+      [
+        "payments_silent_drop"
+      ]
+    ],
+    [
+      "holdout",
+      [
+        "payments_token_revoked"
+      ]
+    ]
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "stats": {
+    "config": {
+      "success": 7,
+      "failure": 1,
+      "last": "success"
+    },
+    "performance": {
+      "success": 1,
+      "failure": 0,
+      "last": "success"
+    },
+    "secrets": {
+      "success": 2,
+      "failure": 0,
+      "last": "success"
+    },
+    "schema": {
+      "success": 2,
+      "failure": 1,
+      "last": "success"
+    },
+    "data": {
+      "success": 5,
+      "failure": 0,
+      "last": "success"
+    },
+    "code": {
+      "success": 4,
+      "failure": 0,
+      "last": "success"
+    },
+    "dependency": {
+      "success": 2,
+      "failure": 0,
+      "last": "success"
+    },
+    "permissions": {
+      "success": 2,
+      "failure": 0,
+      "last": "success"
+    },
+    "workflow": {
+      "success": 2,
+      "failure": 0,
+      "last": "success"
+    }
+  },
+  "min_successes": 2,
+  "min_rate": 0.8
+}

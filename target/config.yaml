@@ -1,0 +1,11 @@
+app:
+  host: 127.0.0.1
+  port: 5050
+database:
+  path: data/shop.db
+payments:
+  url: http://127.0.0.1:5051
+  timeout_seconds: 2
+catalog:
+  cache_enabled: true
+  upstream_latency_ms: 1500
