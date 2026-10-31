@@ -1,6 +1,8 @@
-# TrustOps  an on-call agent that earns its autonomy
+# TrustOps — an on-call agent that earns its autonomy
 
-**Challenge 1: Agentic Recovery of a Failing System** (HUMAIN Future AI Builders)
+**Challenge 1: Agentic Recovery of a Failing System** (HUMAIN Future AI Builders) · by Lama Bin Muryihah
+
+▶ **Demo video (3 min):** https://youtu.be/HF0MT_JxzKE
 
 Even the best models diagnose real infrastructure incidents correctly only about half the time
 (ITBench-AA, June 2026: top score 47%). So the real question is not *can* an agent fix production,
@@ -19,6 +21,25 @@ verified performance**, like a new engineer on probation:
 
 Challenge examples covered: **1** payments that silently drop orders, **3** corrupted data (bad import),
 **4** a workflow that hangs forever (batch job holding a DB lock), **5** a repair agent that never escalates.
+
+## Results
+
+Same 24 incidents (14 dev, 8 held-out, 2 fresh held-out), same order, one run per strategy.
+The referee judges recovery, never the agent.
+
+| Strategy | Correct | Human reviews | Unsafe changes |
+|---|---|---|---|
+| Classic automation (rule-based runbook, no AI) | 8% | 0 | 7 |
+| Agent acting alone | 96% | 0 | 1 |
+| Agent + human approves everything | 96% | 44 | 0 |
+| **TrustOps (earned autonomy)** | **96%** | **30** | **0** |
+
+- **As safe as full human review, with 32% fewer reviews** (41% fewer on held-out incidents, as it earned trust in 7 of 9 problem types).
+- **The one unsafe change:** acting alone, the agent ran a schema migration while the config still pointed at the
+  wrong database, creating an empty production database. TrustOps, on the same incident, did not.
+- **Fresh held-out:** `payments_url_typo` was fixed; `env_token_stray_quote` was escalated by all three strategies (a safe miss).
+- One scoring bug was found in the final run and all rounds were re-scored openly from the logged actions;
+  originals are kept. Details in [`ITERATION_LOG.md`](ITERATION_LOG.md).
 
 ## Quickstart (macOS / Linux, Python 3.10+)
 
@@ -107,7 +128,7 @@ Breaker (faults.py) ──breaks──▶ ShopLite (shop + payments + SQLite + c
 - An action's declared category must match what it touches (a code edit cannot borrow config's trust)
 - No "reset everything" tool; the referee checks data integrity, so deleting data never counts as a fix
 
-## Assumptions (state them openly)
+## Assumptions and limitations
 
 - The simulated reviewer is an expert who knows the true incident; each review costs 5 minutes.
 - ShopLite is small; real systems have more noise. Faults are realistic classes, not real outages.
