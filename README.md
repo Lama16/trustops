@@ -1,4 +1,4 @@
-# TrustOps — an on-call agent that earns its autonomy
+# TrustOps  an on-call agent that earns its autonomy
 
 **Challenge 1: Agentic Recovery of a Failing System** (HUMAIN Future AI Builders)
 
