@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TrustOps Console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #0B3B2E; --panel: #0E4535; --panel2: #123F33; --line: #2A5446; --fg: #F4F6EF; --muted: #A9C2B6;
+  --lime: #C8F25C; --ink: #0B3B2E; --red: #F0705A; --amber: #F2C35C; --blue: #A9BCEB; --blue-ink: #13254A;
+  --display: "Bricolage Grotesque", "Inter Display", "Avenir Next", sans-serif;
+  --text: "Instrument Sans", Inter, "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "DejaVu Sans Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--text); font-size: 18px; overflow: hidden; }
+.app { height: 100%; display: grid; grid-template-rows: auto 1fr; gap: 20px; padding: 26px 32px 32px; }
+header { display: flex; align-items: center; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 14px; font: 800 30px var(--display); letter-spacing: -.5px; }
+.brand small { font: 500 18px var(--text); color: var(--muted); letter-spacing: 0; }
+.page { display: flex; align-items: center; gap: 12px; padding: 10px 20px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); font-weight: 600; }
+.page .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 0 rgba(240,112,90,.7); animation: ping 1.4s infinite; }
+.page.ok .dot { background: var(--lime); animation: none; }
+.page.esc .dot { background: var(--blue); animation: none; }
+@keyframes ping { 70% { box-shadow: 0 0 0 12px rgba(240,112,90,0); } 100% { box-shadow: 0 0 0 0 rgba(240,112,90,0); } }
+.spacer { flex: 1; }
+.stat { text-align: right; }
+.stat b { display: block; font: 700 28px var(--display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 14px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.scen { display: flex; gap: 8px; }
+.scen button { font: 600 15px var(--text); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.scen button:hover { border-color: var(--lime); }
+.grid { display: grid; grid-template-columns: 430px 1fr 430px; gap: 20px; min-height: 0; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 24px; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+.panel h2 { font: 700 15px var(--text); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.check { display: grid; grid-template-columns: 22px 1fr; gap: 4px 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.check:first-of-type { border-top: 0; }
+.light { width: 18px; height: 18px; border-radius: 50%; background: #3B5A50; transition: background .4s, box-shadow .4s; }
+.check.fail .light { background: var(--red); box-shadow: 0 0 14px rgba(240,112,90,.6); }
+.check.pass .light { background: var(--lime); box-shadow: 0 0 14px rgba(200,242,92,.5); }
+.check .name { font: 600 21px var(--text); }
+.check .detail { grid-column: 2; font: 14px var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.score { margin-top: auto; display: flex; align-items: baseline; gap: 10px; }
+.score b { font: 800 64px var(--display); font-variant-numeric: tabular-nums; line-height: 1; }
+.score span { color: var(--muted); }
+.feed { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; padding-right: 4px; }
+.item { animation: in .35s ease both; }
+@keyframes in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.thought { display: grid; grid-template-columns: 84px 1fr; gap: 14px; }
+.thought .who { font: 700 13px var(--text); letter-spacing: .14em; color: var(--lime); padding-top: 6px; }
+.thought p { font: 500 24px/1.38 var(--display); }
+.call { font: 16px var(--mono); color: var(--muted); padding-left: 98px; }
+.call b { color: #D8E4DD; font-weight: 500; }
+.card { border-radius: 16px; padding: 16px 20px; display: flex; flex-direction: column; gap: 8px; margin-left: 98px; border: 1px solid var(--line); background: var(--panel2); }
+.badge { align-self: start; font: 700 14px var(--text); letter-spacing: .1em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; }
+.b-wait { background: var(--amber); color: #3A2A05; }
+.b-ok { background: #E2E8E4; color: var(--ink); }
+.b-auto { background: var(--lime); color: var(--ink); }
+.b-no { background: var(--red); color: #3A0E06; }
+.b-esc { background: var(--blue); color: var(--blue-ink); }
+.card .what { font: 500 19px var(--mono); }
+.card .why { color: var(--muted); font-size: 17px; line-height: 1.4; }
+.card.auto { border-color: var(--lime); }
+.card.esc { border-color: var(--blue); background: #16304A; }
+.card.esc h3, .card.rep h3 { font: 700 26px var(--display); }
+.kv { display: grid; grid-template-columns: 170px 1fr; gap: 6px 14px; font-size: 17px; line-height: 1.4; }
+.kv dt { color: var(--muted); }
+.guard { margin-left: 98px; color: var(--red); font: 600 16px var(--mono); }
+.led { display: grid; grid-template-columns: 1fr auto 120px; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); transition: background .3s; border-radius: 8px; }
+.led:first-of-type { border-top: 0; }
+.led .t { font: 600 19px var(--text); }
+.led .n { font: 15px var(--mono); color: var(--muted); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pill { font: 700 13px var(--text); letter-spacing: .08em; text-transform: uppercase; text-align: center; padding: 6px 0; border-radius: 999px; background: #2E5246; color: #CBD8D1; }
+.pill.trusted { background: var(--lime); color: var(--ink); }
+.led.flash { background: rgba(200,242,92,.16); }
+.tally { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tally div { border-top: 1px solid var(--line); padding-top: 12px; }
+.tally b { display: block; font: 800 44px var(--display); font-variant-numeric: tabular-nums; }
+.tally span { font-size: 14px; color: var(--muted); }
+.verdict { position: fixed; left: 50%; bottom: 46px; transform: translate(-50%, 160%); opacity: 0; transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .3s; background: var(--lime); color: var(--ink); border-radius: 22px; padding: 22px 34px; display: flex; align-items: center; gap: 22px; box-shadow: 0 24px 60px rgba(0,0,0,.4); max-width: 1180px; }
+.verdict.show { transform: translate(-50%, 0); opacity: 1; }
+.verdict span i { font-style: normal; white-space: nowrap; }
+.verdict.esc { background: var(--blue); color: var(--blue-ink); }
+.verdict.bad { background: var(--red); color: #3A0E06; }
+.verdict b { font: 800 40px var(--display); white-space: nowrap; }
+.verdict span { font-size: 18px; line-height: 1.35; }
+.live { display: none; align-items: center; gap: 10px; font: 700 14px var(--text); letter-spacing: .12em; text-transform: uppercase; color: var(--lime); border: 1px solid var(--lime); border-radius: 999px; padding: 8px 14px; }
+body.demo .live { display: flex; }
+.cursor { position: fixed; left: 0; top: 0; width: 34px; height: 34px; pointer-events: none; z-index: 50; transition: transform 1.3s cubic-bezier(.45,0,.2,1), opacity .4s; opacity: 0; }
+.cursor svg { filter: drop-shadow(0 3px 6px rgba(0,0,0,.5)); }
+.ripple { position: fixed; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; border: 3px solid var(--lime); z-index: 49; pointer-events: none; animation: rip .6s ease-out forwards; }
+@keyframes rip { to { transform: scale(4); opacity: 0; } }
+.scen button.pressed { background: var(--lime); color: var(--ink); border-color: var(--lime); }
+.empty { color: var(--muted); font-size: 20px; margin: auto; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 512 512" aria-hidden="true"><rect x="112" y="116" width="288" height="84" rx="26" fill="#F4F6EF"/><rect x="214" y="222" width="84" height="174" rx="26" fill="#C8F25C"/></svg>
+      TrustOps <small>on‑call console</small>
+    </div>
+    <div class="page" id="page"><span class="dot"></span><span id="pageText">Waiting for an incident</span></div>
+    <div class="live"><span class="dot" style="background:var(--lime);width:10px;height:10px;border-radius:50%"></span>Live run · real Claude agent</div>
+    <div class="spacer"></div>
+    <div class="scen" id="scen"><button data-s="A">Break: two faults</button><button data-s="B">Break: code bug</button><button data-s="C">Break: vendor down</button></div>
+    <div class="stat"><b id="clock">0:00</b><span>Elapsed</span></div>
+  </header>
+  <div class="grid">
+    <section class="panel">
+      <h2>System health</h2>
+      <div id="checks"></div>
+      <div class="score"><b id="passed">–</b><span>of 5 checks passing</span></div>
+    </section>
+    <section class="panel">
+      <h2>Agent</h2>
+      <div class="feed" id="feed"><p class="empty">Pick a scenario to break the system.<br>The agent will be paged.</p></div>
+    </section>
+    <section class="panel">
+      <h2>Trust ledger</h2>
+      <div id="ledger"></div>
+      <div class="tally"><div><b id="nHuman">0</b><span>approved by a human</span></div><div><b id="nAuto">0</b><span>made alone</span></div></div>
+    </section>
+  </div>
+</div>
+<div class="verdict" id="verdict"></div>
+<div class="cursor" id="cursor"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M4 2l16 9.5-7 1.6L9.2 20z" fill="#fff" stroke="#0B3B2E" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+<script>
+const CHECKS = { health: "Health", catalog: "Catalog", latency: "Latency", stats_integrity: "Revenue stats", checkout: "Checkout" };
+const ORDER = ["config", "code", "data", "dependency", "secrets", "permissions", "workflow", "schema", "performance"];
+const $ = (id) => document.getElementById(id);
+let t0 = 0, clockT = null, nHuman = 0, nAuto = 0;
+
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function add(html) {
+  const f = $("feed");
+  f.querySelector(".empty")?.remove();
+  const d = document.createElement("div"); d.className = "item"; d.innerHTML = html; f.appendChild(d);
+  while (f.scrollHeight > f.clientHeight && f.children.length > 1) f.firstElementChild.remove();
+  return d;
+}
+function renderChecks(rep) {
+  $("checks").innerHTML = rep.checks.map((c) => `<div class="check ${c.ok ? "pass" : "fail"}"><span class="light"></span><span class="name">${CHECKS[c.check] || c.check}</span><span class="detail">${esc(c.detail)}</span></div>`).join("");
+  $("passed").textContent = rep.passed;
+}
+function renderLedger(led, flash) {
+  $("ledger").innerHTML = ORDER.map((k) => { const s = led[k]; return `<div class="led ${flash === k ? "flash" : ""}" data-k="${k}"><span class="t">${k[0].toUpperCase() + k.slice(1)}</span><span class="n">${s.success} ✓ · ${s.failure} ✗</span><span class="pill ${s.trusted ? "trusted" : ""}">${s.trusted ? "Trusted" : "Must ask"}</span></div>`; }).join("");
+}
+function argStr(a) { const v = Object.entries(a || {}).filter(([k]) => !["category", "reason", "new"].includes(k)).map(([, v]) => String(v)); return v.join(", ").slice(0, 70); }
+function reset(d) {
+  $("feed").innerHTML = ""; nHuman = nAuto = 0; $("nHuman").textContent = 0; $("nAuto").textContent = 0;
+  $("verdict").className = "verdict"; renderLedger(d.ledger);
+  $("page").className = "page"; $("pageText").textContent = "PAGE · ShopLite is failing";
+  t0 = Date.now(); clearInterval(clockT);
+  clockT = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $("clock").textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }, 250);
+}
+const handlers = {
+  start: reset,
+  symptoms: (d) => { renderChecks(d); add(`<div class="thought"><span class="who">PAGE</span><p>${5 - d.passed} of 5 health checks are failing. Agent paged.</p></div>`); },
+  checks: renderChecks,
+  thought: (d) => add(`<div class="thought"><span class="who">AGENT</span><p>${esc(d.length > 260 ? d.slice(0, 257) + "…" : d)}</p></div>`),
+  call: (d) => { if (["submit_report", "escalate_to_human"].includes(d.tool)) return; add(`<div class="call">› <b>${esc(d.tool)}</b>(${esc(argStr(d.args))})</div>`); },
+  gate: (d) => {
+    const what = `${esc(d.tool)} · ${esc(d.category)}`;
+    if (d.mode === "auto") {
+      nAuto++; $("nAuto").textContent = nAuto;
+      add(`<div class="card auto"><span class="badge b-auto">Acted alone · trust earned: ${esc(d.category)}</span><span class="what">${what}</span><span class="why">${esc(d.reason)}</span></div>`);
+      document.querySelector(`.led[data-k="${d.category}"]`)?.classList.add("flash");
+    } else if (d.mode === "approved") {
+      nHuman++; $("nHuman").textContent = nHuman;
+      const el = add(`<div class="card"><span class="badge b-wait">Waiting for on‑call approval</span><span class="what">${what}</span><span class="why">${esc(d.reason)}</span></div>`);
+      setTimeout(() => { const b = el.querySelector(".badge"); b.className = "badge b-ok"; b.textContent = "Approved by on‑call"; }, 1100);
+    } else {
+      add(`<div class="card"><span class="badge b-no">Rejected by on‑call</span><span class="what">${what}</span><span class="why">${esc(d.reason)}</span></div>`);
+    }
+  },
+  result: (d) => { if (/PermissionError|only single read-only/.test(d.out)) add(`<div class="guard">Guardrail: ${esc(d.out.slice(0, 120))}</div>`); },
+  breaker: (d) => add(`<div class="guard">Circuit breaker: ${esc(d)}</div>`),
+  escalation: (d) => add(`<div class="card esc"><span class="badge b-esc">Escalated to on‑call human</span><h3>${esc(d.suspected_cause)}</h3><dl class="kv"><dt>Evidence</dt><dd>${esc((d.evidence || "").slice(0, 220))}</dd><dt>Changes made</dt><dd>${esc((d.actions_taken || "").slice(0, 160))}</dd><dt>Next step</dt><dd>${esc((d.recommended_next_step || "").slice(0, 200))}</dd></dl></div>`),
+  report: (d) => add(`<div class="card rep"><span class="badge b-ok">Incident report</span>${(d.root_causes || []).map((r) => `<span class="what">${esc(r.category)} · ${esc(r.component)}</span>`).join("")}<span class="why">${esc((d.summary || "").slice(0, 300))}</span></div>`),
+  verdict: renderChecks,
+  done: (d) => {
+    clearInterval(clockT); renderLedger(d.ledger);
+    const r = d.row, v = $("verdict");
+    const rec = r.outcome === "recovered", escd = r.outcome === "escalated";
+    $("page").className = "page " + (rec ? "ok" : escd ? "esc" : "");
+    $("pageText").textContent = rec ? "Resolved" : escd ? "Escalated to on‑call" : "Unresolved";
+    v.className = "verdict show " + (rec ? "" : escd ? "esc" : "bad");
+    v.innerHTML = `<b>${rec ? "Recovered" : escd ? "Escalated" : "Not recovered"}</b><span><i>Referee: ${r.checks_passed} of 5 checks pass</i> · <i>${r.human_reviews} human approvals</i> · <i>${r.auto_actions} changes made alone</i><br>Ground truth: ${esc(d.truth.join(" + "))}</span>`;
+  },
+  error: (d) => add(`<div class="guard">Error: ${esc(d.message)}</div>`),
+};
+const es = new EventSource("/events");
+es.onmessage = (m) => { const { kind, data } = JSON.parse(m.data); handlers[kind]?.(data); };
+document.querySelectorAll("#scen button").forEach((b) => b.addEventListener("click", () => fetch("/run/" + b.dataset.s, { method: "POST" })));
+const qs = new URLSearchParams(location.search);
+if (qs.get("hide") === "1") $("scen").hidden = true;
+if (qs.get("demo")) {
+  document.body.classList.add("demo");
+  const btn = document.querySelector(`#scen button[data-s="${qs.get("demo")}"]`), cur = $("cursor");
+  cur.style.transform = "translate(1100px, 640px)";
+  setTimeout(() => { cur.style.opacity = 1; }, 500);
+  setTimeout(() => { const r = btn.getBoundingClientRect(); cur.style.transform = `translate(${r.left + r.width / 2 - 6}px, ${r.top + r.height / 2 - 4}px)`; }, 900);
+  setTimeout(() => {
+    const r = btn.getBoundingClientRect(), rp = document.createElement("div");
+    rp.className = "ripple"; rp.style.left = r.left + r.width / 2 + "px"; rp.style.top = r.top + r.height / 2 + "px"; document.body.appendChild(rp);
+    btn.classList.add("pressed"); fetch("/run/" + qs.get("demo"), { method: "POST" });
+  }, 2500);
+  setTimeout(() => { cur.style.opacity = 0; }, 3300);
+} else if (qs.get("scenario")) setTimeout(() => fetch("/run/" + qs.get("scenario"), { method: "POST" }), 2500);
+renderLedger(Object.fromEntries(ORDER.map((k) => [k, { success: 0, failure: 0, trusted: false }])));
+renderChecks({ passed: "–", checks: Object.keys(CHECKS).map((c) => ({ check: c, ok: null, detail: "" })) });
+document.querySelectorAll(".check").forEach((c) => c.classList.remove("pass", "fail"));
+</script>
+</body>
+</html>

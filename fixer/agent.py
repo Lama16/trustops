@@ -157,5 +157,7 @@ class FixerAgent:
         else:
             out = f"ERROR: unknown tool {name}"
         self._track_progress(name, args, out, decision)
+        if name == "run_smoke_tests" and isinstance(out, dict):
+            self.emit("checks", out)
         self.emit("result", {"tool": name, "out": _fmt(out, 600)})
         return out

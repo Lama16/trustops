@@ -29,6 +29,7 @@ python -m tests.test_pipeline            # trust layer + agent loop, no API key 
 
 export ANTHROPIC_API_KEY=...             # in your shell only, never in code
 python demo.py --fault payments_down config_wrong_db_path
+python -m console.server                 # live web console on http://127.0.0.1:8090
 python eval.py --dev-rounds 8 --holdout-rounds 6
 ```
 
@@ -53,7 +54,7 @@ Breaker (faults.py) ──breaks──▶ ShopLite (shop + payments + SQLite + c
 | Path | Role |
 |---|---|
 | `target/` | ShopLite: the system under test (pristine copy) |
-| `arena/faults.py` | 10 faults with ground-truth fixes, `dev` / `holdout` split |
+| `arena/faults.py` | 16 faults with ground-truth fixes, `dev` / `holdout` / fresh held-out split |
 | `arena/referee.py` | Independent verdict: health, catalog, latency, stats integrity, checkout |
 | `arena/tools.py` | The Fixer's only interface, with safety rails |
 | `fixer/agent.py` | LLM agent loop |
@@ -61,7 +62,8 @@ Breaker (faults.py) ──breaks──▶ ShopLite (shop + payments + SQLite + c
 | `fixer/runbook.py` | Rule-based baseline (classic automation) |
 | `ITERATION_LOG.md` | Every change, the failure that triggered it, its regression test, and the re-measure |
 | `eval.py` | Same incident sequence under 3 strategies → `results/<run>/` |
-| `demo.py` | Live, colour-coded single incident for the video |
+| `demo.py` | Live, colour-coded single incident in the terminal |
+| `console/` | Live web console (health checks, agent feed, trust gate, ledger) used in the demo video |
 
 ## Faults (16)
 
